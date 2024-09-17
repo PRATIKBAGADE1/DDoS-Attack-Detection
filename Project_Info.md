@@ -60,7 +60,7 @@ Organizations can use the following measures to protect against DDoS attacks:
 
 ## Images
 
-- **Img1**: ![Image 1](#)
+- **Img1**: ![Image 1](ss/Img1.png)
 - **Img2**: ![Image 2](#)
 - **Img3**: ![Image 3](#)
 - **Img4**: ![Image 4](#)
