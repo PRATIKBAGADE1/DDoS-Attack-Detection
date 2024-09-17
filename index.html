@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DDoS Attack Monitoring</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            margin-top: 20px;
+        }
+        .table-container {
+            margin-bottom: 30px;
+        }
+        .btn-query {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">DDoS Attack Monitoring Dashboard</h1>
+        
+        <div class="table-container">
+            <h2>Detected Attacks</h2>
+            <button class="btn btn-primary btn-query" onclick="fetchData('getAttacks', 'attackData')">Fetch Attacks</button>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Attack Type</th>
+                            <th>Attack Date</th>
+                            <th>Source IP</th>
+                            <th>Source Country</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attackData"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2>Network Traffic</h2>
+            <button class="btn btn-primary btn-query" onclick="fetchData('getTraffic', 'trafficData')">Fetch Traffic</button>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Timestamp</th>
+                            <th>Source IP</th>
+                            <th>Destination IP</th>
+                            <th>Protocol</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trafficData"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2>System Logs</h2>
+            <button class="btn btn-primary btn-query" onclick="fetchData('getSystemLogs', 'systemLogData')">Fetch System Logs</button>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Event Name</th>
+                            <th>Event Date</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="systemLogData"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2>Botnet Information</h2>
+            <button class="btn btn-primary btn-query" onclick="fetchData('getBotnets', 'botnetData')">Fetch Botnet Info</button>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Botnet Name</th>
+                            <th>Command Control IP</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="botnetData"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2>Mitigation Strategies</h2>
+            <button class="btn btn-primary btn-query" onclick="fetchData('getMitigationStrategies', 'mitigationData')">Fetch Mitigation Strategies</button>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Strategy Name</th>
+                            <th>Description</th>
+                            <th>Effectiveness Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mitigationData"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2>Detection Rules</h2>
+            <button class="btn btn-primary btn-query" onclick="fetchData('getDetectionRules', 'detectionRulesData')">Fetch Detection Rules</button>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Rule Name</th>
+                            <th>Rule Description</th>
+                            <th>Type Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detectionRulesData"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function fetchData(action, elementId) {
+            let db = '';
+            if (action === 'getAttacks' || action === 'getDetectionRules') {
+                db = 'attack_detection';
+            } else if (action === 'getTraffic') {
+                db = 'network_traffic';
+            } else if (action === 'getSystemLogs') {
+                db = 'system_logging';
+            } else if (action === 'getBotnets') {
+                db = 'botnet_information';
+            } else if (action === 'getMitigationStrategies') {
+                db = 'mitigation_strategies';
+            }
+
+            fetch(`api.php?action=${action}&db=${db}`)
+                .then(response => response.json())
+                .then(data => {
+                    let html = '';
+                    data.forEach(item => {
+                        html += '<tr>';
+                        for (const key in item) {
+                            html += `<td>${item[key]}</td>`;
+                        }
+                        html += '</tr>';
+                    });
+                    document.getElementById(elementId).innerHTML = html;
+                });
+        }
+    </script>
+</body>
+</html>
